@@ -8,7 +8,7 @@
 
 $x^2 + \int x^4 / 2 = 1$
 
-```
+```c
 int i = 1;
 void main() {
  std::cout<< "stuff";
@@ -41,7 +41,7 @@ hljs.registerLanguage('rust', rust);
 hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('json', json);
 
-const showRawMarkdown: Ref<boolean, boolean> = ref(true);
+const showPreview: Ref<boolean, boolean> = ref(false);
 
 const md: MarkdownIt = MarkdownIt({
   html: false,
@@ -120,16 +120,52 @@ const handleCheckboxClick = (e: MouseEvent) => {
 };
 
 const changeView = () => {
-  showRawMarkdown.value = !showRawMarkdown.value;
+  showPreview.value = !showPreview.value;
 }
 </script>
 <template>
-<textarea v-if="showRawMarkdown" name="editor" id="editor" v-model="content" class="bg-black text-white w-full resize-none focus:outline-none h-svh p-2.5" />
-<div v-else class=" bg-black text-white w-full h-svh p-2.5" @click="handleCheckboxClick" v-html="rendered"></div>
-<button class="cursor-pointer" @click="changeView">Show Preview</button>
+  <div class="w-full flex relative">
+    <textarea :class="{'editor-half': showPreview }" name="editor" id="editor" v-model="content" class="absolute editor textarea textarea-primary bg-black text-white w-full resize-none focus:outline-none h-svh p-2.5" />
+    <Transition name="slide">
+        <div v-if="showPreview" id="preview" class="absolute right-0 textarea textarea-secondary bg-black text-white w-[50%] h-svh p-2.5 overflow-x-hidden" @click="handleCheckboxClick" v-html="rendered"></div>
+    </Transition>
+  </div>
+
+  <label class="swap swap-rotate absolute right-4 top-4 border-2 rounded-full">
+    <input @click="changeView" type="checkbox" class="theme-controller" value="synthwave" />
+    <svg class="swap-on h-10 w-10 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M504.6 148.5C515.9 134.9 514.1 114.7 500.5 103.4C486.9 92.1 466.7 93.9 455.4 107.5L320 270L184.6 107.5C173.3 93.9 153.1 92.1 139.5 103.4C125.9 114.7 124.1 134.9 135.4 148.5L278.3 320L135.4 491.5C124.1 505.1 125.9 525.3 139.5 536.6C153.1 547.9 173.3 546.1 184.6 532.5L320 370L455.4 532.5C466.7 546.1 486.9 547.9 500.5 536.6C514.1 525.3 515.9 505.1 504.6 491.5L361.7 320L504.6 148.5z"/></svg>
+
+    <svg class="swap-off h-10 w-10 fill-current"
+    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M480 576L192 576C139 576 96 533 96 480L96 160C96 107 139 64 192 64L496 64C522.5 64 544 85.5 544 112L544 400C544 420.9 530.6 438.7 512 445.3L512 512C529.7 512 544 526.3 544 544C544 561.7 529.7 576 512 576L480 576zM192 448C174.3 448 160 462.3 160 480C160 497.7 174.3 512 192 512L448 512L448 448L192 448zM224 216C224 229.3 234.7 240 248 240L424 240C437.3 240 448 229.3 448 216C448 202.7 437.3 192 424 192L248 192C234.7 192 224 202.7 224 216zM248 288C234.7 288 224 298.7 224 312C224 325.3 234.7 336 248 336L424 336C437.3 336 448 325.3 448 312C448 298.7 437.3 288 424 288L248 288z"/></svg>
+  </label>
 </template>
 
 <style scoped>
+
+ /* Animations */
+
+ .editor {
+   width: 100%;
+   transition: width 0.4s ease; /* 👈 this animates the width */
+ }
+
+ .editor.editor-half {
+   width: 50%;
+ }
+
+ .slide-enter-active {
+   transition: all 0.4s ease;
+ }
+
+ .slide-leave-active {
+   transition: all 0.4s ease;
+ }
+
+ .slide-enter-from,
+ .slide-leave-to {
+   transform: translateX(100%);
+ }
+
  /* Hide bullet for task list items */
 :deep(li.task-list-item) {
   list-style: none;
