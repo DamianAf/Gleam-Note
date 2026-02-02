@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+*:focus {
+    outline: 0;
+}
+
 /* Headers */
 h1 {
   font-size: 1.875rem;
@@ -87,4 +91,93 @@ ul ul ul {
 p {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
+}
+
+.tab {
+  @layer daisyui.l1.l2.l3 {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+    appearance: none;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    webkit-user-select: none;
+    user-select: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-base-content) /* var(--color-base-content) */;
+        overflow: scroll;
+        z-index: 10;
+      }
+    }
+    --tab-p: 0.75rem /* 12px */;
+    --tab-bg: var(--color-base-100) /* var(--color-base-100) */;
+    --tab-border-color: var(--color-base-300) /* var(--color-base-300) */;
+    --tab-radius-ss: 0;
+    --tab-radius-se: 0;
+    --tab-radius-es: 0;
+    --tab-radius-ee: 0;
+    --tab-order: 0;
+    --tab-radius-min: calc(0.75rem /* 12px */ - var(--border));
+    --tab-radius-limit: min(var(--radius-field) /* var(--radius-field) */, var(--tab-radius-min));
+    --tab-radius-grad: #0000 calc(69% - var(--border)),
+      var(--tab-border-color) calc(69% - var(--border) + 0.25px),
+      var(--tab-border-color) 69%,
+      var(--tab-bg) calc(69% + 0.25px);
+    border-color: #0000;
+    order: var(--tab-order);
+    height: var(--tab-height);
+    font-size: 0.875rem /* 14px */;
+    padding-inline: var(--tab-p);
+    &:is(input[type="radio"]) {
+      min-width: fit-content;
+      &:after {
+        --tw-content: attr(aria-label);
+        content: var(--tw-content);
+      }
+    }
+    &:is(label) {
+      position: relative;
+      input {
+        position: absolute;
+        inset: calc(0.25rem /* 4px */ * 0) /* 0rem = 0px */;
+        cursor: pointer;
+        appearance: none;
+        opacity: 0%;
+      }
+    }
+    &:checked, &:is(label:has(:checked)), &:is(.tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"]) {
+      & + .tab-content {
+        display: absolute;
+        background-color: green;
+      }
+    }
+    &:not( :checked, label:has(:checked), :hover, .tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"] ) {
+      color: color-mix(in oklab, var(--color-base-content) /* var(--color-base-content) */ 50%, transparent);
+    }
+    &:not(input):empty {
+      flex-grow: 1;
+      cursor: default;
+    }
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
+      @media (forced-colors: active) {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    &:focus-visible, &:is(label:has(:checked:focus-visible)) {
+      outline: 2px solid currentColor;
+      outline-offset: -5px;
+    }
+    &[disabled] {
+      pointer-events: none;
+      opacity: 40%;
+    }
+  }
 }

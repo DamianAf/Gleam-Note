@@ -1,0 +1,4 @@
+- [ ] implement exporting to PDF, etc.
+- [ ] implement saving notes
+- [ ] implement nodes
+- [ ] implement tabs

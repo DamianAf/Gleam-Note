@@ -43,6 +43,14 @@ hljs.registerLanguage('json', json);
 
 const showPreview: Ref<boolean, boolean> = ref(false);
 
+const props = defineProps<{
+  modelValue: string;
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>();
+
 const md: MarkdownIt = MarkdownIt({
   html: false,
   linkify: true,
@@ -61,10 +69,10 @@ const md: MarkdownIt = MarkdownIt({
   throwOnError: false,
   errorColor: "#ff6666",
 });
-const content: Ref<string, string> = ref('');
+const content: Ref<string, string> = ref(props.modelValue);
 
 const rendered: ComputedRef<string> = computed(() => {
-  let html: string = md.render(content.value);
+  let html: string = md.render(props.modelValue);
   html = enableCheckboxes(html);
   return html;
 })
@@ -122,10 +130,14 @@ const handleCheckboxClick = (e: MouseEvent) => {
 const changeView = () => {
   showPreview.value = !showPreview.value;
 }
+
+function onContentChange(newContent: string) {
+  emit('update:modelValue', newContent);
+}
 </script>
 <template>
   <div class="w-full flex relative">
-    <textarea :class="{'editor-half': showPreview }" name="editor" id="editor" v-model="content" class="absolute editor textarea textarea-primary bg-black text-white w-full resize-none focus:outline-none h-svh p-2.5" />
+    <textarea :class="{'editor-half': showPreview }" name="editor" id="editor" v-model="props.modelValue" @input="onContentChange(($event.target as HTMLTextAreaElement).value)" class="absolute editor textarea textarea-primary bg-black text-white w-full resize-none focus:outline-none h-svh p-2.5" />
     <Transition name="slide">
         <div v-if="showPreview" id="preview" class="absolute right-0 textarea textarea-secondary bg-black text-white w-[50%] h-svh p-2.5 overflow-x-hidden" @click="handleCheckboxClick" v-html="rendered"></div>
     </Transition>
