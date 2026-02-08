@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, Ref, ref } from 'vue';
+import { computed, reactive, } from 'vue';
 import Editor from './Editor.vue';
 import SideBar from './SideBar.vue';
 
@@ -17,7 +17,7 @@ import SideBar from './SideBar.vue';
 const json = reactive({
   amount: 3,
   active: 0,
-  id_0: {
+  tabs: [{
     title: "Tony Stark afsdfasdfasdfasdfasdfasdfasdfasd fasdf sdasfd asdfasdf  asfdasdfasdf  adfas",
     content: `# h1 element
       ---
@@ -26,8 +26,7 @@ const json = reactive({
       \`\`\`c
       int i = 3
       \`\`\``,
-  },
-  id_1: {
+    }, {
     title: "Batman",
     content: `# h1 element
       ---
@@ -36,8 +35,7 @@ const json = reactive({
       \`\`\`c
       int i = 2
       \`\`\``,
-  },
-  id_2: {
+    }, {
     title: "Batman 2",
     content: `# h1 element
       ---
@@ -46,17 +44,16 @@ const json = reactive({
       \`\`\`c
       int i = 2
       \`\`\``,
-  },
+  }],
 });
 
-const activeContent = computed(() => `id_${json.active}`);
+const activeContent = computed(() => json.active);
 
 </script>
 
 <template>
 <main class="flex">
 <SideBar :model-value="json" @update:model-value="(val) => Object.assign(json, val)" />
-<Editor v-model="json[activeContent].content" :key=json.active />
-{{json.active}}
+<Editor v-model="json.tabs[activeContent].content" :key=json.active />
 </main>
 </template>
