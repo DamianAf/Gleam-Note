@@ -15,7 +15,6 @@ import SideBar from './SideBar.vue';
 */
 
 const json = reactive({
-  amount: 3,
   active: 0,
   tabs: [{
     title: "Tony Stark afsdfasdfasdfasdfasdfasdfasdfasd fasdf sdasfd asdfasdf  asfdasdfasdf  adfas",
@@ -47,13 +46,22 @@ const json = reactive({
   }],
 });
 
-const activeContent = computed(() => json.active);
-
+const activeTabContent = computed({
+  get() {
+    return json.tabs[json.active]?.content ?? '';
+  },
+  set(value: string) {
+    if (json.tabs[json.active]) {
+      json.tabs[json.active].content = value;
+    }
+  }
+});
+const amount = computed(() => json.tabs.length);
 </script>
 
 <template>
 <main class="flex">
 <SideBar :model-value="json" @update:model-value="(val) => Object.assign(json, val)" />
-<Editor v-model="json.tabs[activeContent].content" :key=json.active />
+<Editor v-if="amount > 0" v-model="activeTabContent" :key=json.active />
 </main>
 </template>
