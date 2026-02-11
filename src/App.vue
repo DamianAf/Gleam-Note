@@ -5,45 +5,17 @@ import SideBar from './SideBar.vue';
 
 /*
   {
-    amount: number,
-    actove: number,
-    id_{num}: {
-      title: string,
-      content: string,
-    }
+    active: number,
+    tabs: [{
+    title: string,
+    content: string
+    }]
   }
 */
 
 const json = reactive({
-  active: 0,
-  tabs: [{
-    title: "Tony Stark afsdfasdfasdfasdfasdfasdfasdfasd fasdf sdasfd asdfasdf  asfdasdfasdf  adfas",
-    content: `# h1 element
-      ---
-      - [ ] testing
-      $x^2 + \\int x^4 / 2 = 1$
-      \`\`\`c
-      int i = 3
-      \`\`\``,
-    }, {
-    title: "Batman",
-    content: `# h1 element
-      ---
-      - [ ] asdf
-      $x^2 + \\int x^4 / 2 = 1$
-      \`\`\`c
-      int i = 2
-      \`\`\``,
-    }, {
-    title: "Batman 2",
-    content: `# h1 element
-      ---
-      - [ ] testasdfasdfasdfing
-      $x^2 + \\int x^4 / 2 = 1$
-      \`\`\`c
-      int i = 2
-      \`\`\``,
-  }],
+  active: -1,
+  tabs: []
 });
 
 const activeTabContent = computed({

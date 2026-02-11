@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@mdit/plugin-tasklist": "^0.22.2",
-    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.6.0",
+    "@tauri-apps/plugin-fs": "^2.4.5",
     "@tauri-apps/plugin-opener": "^2",
     "@vscode/markdown-it-katex": "^1.1.2",
     "highlight.js": "^11.11.1",

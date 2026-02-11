@@ -18,8 +18,26 @@
       }
     ],
     "security": {
-      "csp": null
-    }
+      "csp": null,
+      "capabilities": [
+          {
+            "plugins": {
+              "dialog": {},
+              "fs": {}
+            },
+            "identifier": "file-access",
+            "permissions": [
+              "core:default",
+              "dialog:allow-save",
+              "dialog:allow-open",
+              "fs:allow-app-write"
+            ],
+            "allowed-paths": ["$DOCUMENT/**", "$DESKTOP/**", "$HOME/**"],
+            "windows": ["main"]
+          }
+        ]
+    },
+    "withGlobalTauri": true
   },
   "bundle": {
     "active": true,

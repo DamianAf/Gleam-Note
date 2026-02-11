@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { open, save } from '@tauri-apps/plugin-dialog';
+import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 
 const activeTabTitle = computed(() => { return props.modelValue.tabs[props.modelValue.active]?.title || '';});
 const props = defineProps<{
@@ -59,21 +61,52 @@ function handleDeletion() {
   updateJSONProp(tempObj);
 }
 
+async function openProject() {
+  const file = await open({
+    multiple: false,
+    directory: false,
+    filters: [{ name: "All Files", extensions: ["txt"] }]
+  });
+  try {
+    const content = await readTextFile(String(file));
+    updateJSONProp(JSON.parse(content));
+    const dropdown = document.getElementById("dropdownMenu") as HTMLDetailsElement;
+    dropdown.open = false;
+  } catch(err) {
+    console.log("Err: ", err);
+  }
+}
+
+async function saveProject() {
+  const filePath = await save({
+    filters: [{ name: "Text Files", extensions: ["txt"] }]
+  });
+
+  if (filePath) {
+    try {
+      await writeTextFile(filePath, JSON.stringify(props.modelValue));
+      console.log("File saved successfully!");
+    } catch (err) {
+      console.error("Failed to write file:", err);
+    }
+  }
+}
+
 </script>
 
 <template>
 <div class="flex flex-col">
     <div class="join">
 
-        <details class="dropdown border-sky-500">
+        <details id="dropdownMenu" class="dropdown border-sky-500">
         <summary class="btn join-item rounded-full p-2 border-base-100 border-2 hover:border-slate-50">
         <svg  class="w-5 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
             <path d="M96 160C96 142.3 110.3 128 128 128L512 128C529.7 128 544 142.3 544 160C544 177.7 529.7 192 512 192L128 192C110.3 192 96 177.7 96 160zM96 320C96 302.3 110.3 288 128 288L512 288C529.7 288 544 302.3 544 320C544 337.7 529.7 352 512 352L128 352C110.3 352 96 337.7 96 320zM544 480C544 497.7 529.7 512 512 512L128 512C110.3 512 96 497.7 96 480C96 462.3 110.3 448 128 448L512 448C529.7 448 544 462.3 544 480z"/>
         </svg>
         </summary>
         <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm" style="list-style-type: none; border: 1px solid gray; margin-left: 2px; padding-left: 5px;">
-        <li><a>Item 1</a></li>
-        <li><a>Item 2</a></li>
+        <li><a @click=openProject() >Open Project</a></li>
+        <li><a @click=saveProject() >Save Project</a></li>
         </ul>
         </details>
 
